@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { Analytics } from "@/components/analytics"
 import { cn } from "@/lib/utils"
+import Script from "next/script"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -66,7 +67,6 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "https://alquran-api.pages.dev/site.webmanifest",
-    generator: 'saikothasan.pages.dev'
 }
 
 export const viewport: Viewport = {
@@ -94,11 +94,25 @@ export default function RootLayout({
           </div>
         </ThemeProvider>
         <Analytics />
+
+        {/* Google Analytics */}
+        <Script strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=G-1W3WDXDHR6" />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-1W3WDXDHR6', {
+              page_path: window.location.pathname,
+            });
+          `,
+          }}
+        />
       </body>
     </html>
   )
 }
 
-
-
-import './globals.css'
