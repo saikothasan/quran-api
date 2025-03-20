@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { Copy, ExternalLink, Globe } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -23,7 +23,7 @@ interface ApiTesterProps {
   baseUrl: string
 }
 
-export function ApiTester({ baseUrl }: ApiTesterProps) {
+function ApiTesterInner({ baseUrl }: ApiTesterProps) {
   const [surahNumber, setSurahNumber] = useState<string>("")
   const [verseNumber, setVerseNumber] = useState<string>("")
   const [apiUrl, setApiUrl] = useState<string>("")
@@ -325,6 +325,14 @@ export function ApiTester({ baseUrl }: ApiTesterProps) {
       </CardContent>
       <Toaster />
     </Card>
+  )
+}
+
+export function ApiTester(props: ApiTesterProps) {
+  return (
+    <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
+      <ApiTesterInner {...props} />
+    </Suspense>
   )
 }
 
