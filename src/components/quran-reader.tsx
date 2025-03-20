@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { Book, ChevronLeft, ChevronRight, Loader2, Search, Volume2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -47,7 +47,7 @@ interface QuranReaderProps {
   baseUrl: string
 }
 
-export function QuranReader({ baseUrl }: QuranReaderProps) {
+function QuranReaderInner({ baseUrl }: QuranReaderProps) {
   const [languages, setLanguages] = useState<Language[]>([])
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en")
   const [surahs, setSurahs] = useState<Surah[]>([])
@@ -458,6 +458,14 @@ export function QuranReader({ baseUrl }: QuranReaderProps) {
       </CardFooter>
       <Toaster />
     </Card>
+  )
+}
+
+export function QuranReader(props: QuranReaderProps) {
+  return (
+    <Suspense fallback={<Skeleton className="h-[800px] w-full" />}>
+      <QuranReaderInner {...props} />
+    </Suspense>
   )
 }
 
