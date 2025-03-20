@@ -3,13 +3,13 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Book, Github, Menu, Search, X } from "lucide-react"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { cn } from "@/lib/utils"
 
-export function SiteHeader() {
+function SiteHeaderInner() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -65,7 +65,7 @@ export function SiteHeader() {
               {route.label}
             </Link>
           ))}
-          <Link href="https://github.com/yourusername/alquran-api" target="_blank" rel="noopener noreferrer">
+          <Link href="https://github.com/saikothasan/quran-api" target="_blank" rel="noopener noreferrer">
             <Button variant="ghost" size="icon">
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
@@ -108,7 +108,7 @@ export function SiteHeader() {
               </Link>
             ))}
             <Link
-              href="https://github.com/yourusername/alquran-api"
+              href="https://github.com/saikothasan/quran-api"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center py-2 text-base font-medium text-muted-foreground hover:text-primary"
@@ -121,6 +121,14 @@ export function SiteHeader() {
         </div>
       )}
     </header>
+  )
+}
+
+export function SiteHeader() {
+  return (
+    <Suspense fallback={<div className="h-16 border-b"></div>}>
+      <SiteHeaderInner />
+    </Suspense>
   )
 }
 
