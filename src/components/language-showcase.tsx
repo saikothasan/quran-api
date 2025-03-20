@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { motion } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
@@ -11,7 +11,7 @@ interface ApiResponse {
   error?: string
 }
 
-export function LanguageShowcase() {
+function LanguageShowcaseInner() {
   const [languages, setLanguages] = useState<Language[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -83,6 +83,22 @@ export function LanguageShowcase() {
         </motion.div>
       ))}
     </div>
+  )
+}
+
+export function LanguageShowcase() {
+  return (
+    <Suspense
+      fallback={
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-lg" />
+          ))}
+        </div>
+      }
+    >
+      <LanguageShowcaseInner />
+    </Suspense>
   )
 }
 
