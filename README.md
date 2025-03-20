@@ -59,39 +59,37 @@ Available language codes:
 ### Example Requests
 
 #### Get all surahs in English
-```
+
 
 GET [https://alquran-api.pages.dev/api/quran?lang=en](https://alquran-api.pages.dev/api/quran?lang=en)
 
-```plaintext
 
 #### Get Surah Al-Fatihah in Arabic
-```
+
 
 GET [https://alquran-api.pages.dev/api/quran/surah/1?lang=ar](https://alquran-api.pages.dev/api/quran/surah/1?lang=ar)
 
-```plaintext
 
 #### Get a specific verse
-```
+
 
 GET [https://alquran-api.pages.dev/api/quran/surah/1/verse/1?lang=en](https://alquran-api.pages.dev/api/quran/surah/1/verse/1?lang=en)
 
-```plaintext
+
 
 #### Search for "mercy" in the Quran
-```
+
 
 GET [https://alquran-api.pages.dev/api/quran/search?q=mercy&lang=en](https://alquran-api.pages.dev/api/quran/search?q=mercy&lang=en)
 
-```plaintext
+
 
 #### Get available languages
-```
+
 
 GET [https://alquran-api.pages.dev/api/quran/languages](https://alquran-api.pages.dev/api/quran/languages)
 
-```plaintext
+
 
 ## 🚀 Getting Started
 
