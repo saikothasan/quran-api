@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { ArrowRight, ChevronDown, ChevronUp, Copy, ExternalLink } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface ApiEndpointsProps {
   baseUrl: string
@@ -28,7 +29,7 @@ interface Endpoint {
   response: string
 }
 
-export function ApiEndpoints({ baseUrl }: ApiEndpointsProps) {
+function ApiEndpointsInner({ baseUrl }: ApiEndpointsProps) {
   const [expandedEndpoint, setExpandedEndpoint] = useState<string | null>("all-surahs")
 
   const toggleEndpoint = (id: string) => {
@@ -349,6 +350,14 @@ export function ApiEndpoints({ baseUrl }: ApiEndpointsProps) {
       </Card>
       <Toaster />
     </div>
+  )
+}
+
+export function ApiEndpoints(props: ApiEndpointsProps) {
+  return (
+    <Suspense fallback={<Skeleton className="h-[600px] w-full" />}>
+      <ApiEndpointsInner {...props} />
+    </Suspense>
   )
 }
 
