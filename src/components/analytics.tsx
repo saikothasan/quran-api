@@ -2,8 +2,9 @@
 
 import { usePathname, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
+import { Suspense } from "react"
 
-export function Analytics() {
+function AnalyticsInner() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -16,5 +17,13 @@ export function Analytics() {
   }, [pathname, searchParams])
 
   return null
+}
+
+export function Analytics() {
+  return (
+    <Suspense fallback={null}>
+      <AnalyticsInner />
+    </Suspense>
+  )
 }
 
