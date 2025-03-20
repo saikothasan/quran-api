@@ -34,6 +34,16 @@ interface SearchResponse {
   total: number
 }
 
+interface ApiResponse {
+  languages?: Language[]
+  error?: string
+  language?: string
+  query?: string
+  results?: SearchResult[]
+  total?: number
+  [key: string]: any
+}
+
 export default function SearchPage() {
   const [query, setQuery] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -56,7 +66,7 @@ export default function SearchPage() {
           throw new Error(`Failed to fetch languages: ${response.status} ${response.statusText}`)
         }
 
-        const data = await response.json()
+        const data = (await response.json()) as ApiResponse
 
         if (data.error) {
           throw new Error(data.error)
@@ -107,13 +117,13 @@ export default function SearchPage() {
         throw new Error(`Search failed: ${response.status} ${response.statusText}`)
       }
 
-      const data = await response.json()
+      const data = (await response.json()) as ApiResponse
 
       if (data.error) {
         throw new Error(data.error)
       }
 
-      setSearchResults(data)
+      setSearchResults(data as SearchResponse)
     } catch (error) {
       console.error("Search error:", error)
       setError(error instanceof Error ? error.message : "Search failed")
