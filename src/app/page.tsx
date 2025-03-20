@@ -1,6 +1,6 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { Book, Code, Globe, Server } from "lucide-react"
+import { Book, Code, Globe, MessageCircle, Server } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -153,6 +153,17 @@ export default function HomePage() {
                 <Link href="/demo">
                   <Book className="mr-2 h-4 w-4" />
                   Try Demo App
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="bg-[#0088cc] text-white border-[#0088cc] hover:bg-[#0088cc]/90 hover:text-white"
+              >
+                <Link href="https://t.me/drkingbd" target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  Join our Telegram
                 </Link>
               </Button>
             </div>
