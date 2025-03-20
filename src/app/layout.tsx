@@ -1,18 +1,81 @@
 import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import type { Metadata, Viewport } from "next"
+import { Inter, Amiri } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { ThemeToggle } from "@/components/theme-toggle"
-import Link from "next/link"
-import { Book, Github, Search } from "lucide-react"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
+import { Analytics } from "@/components/analytics"
+import { cn } from "@/lib/utils"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
+
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-arabic",
+})
 
 export const metadata: Metadata = {
-  title: "Multilingual Al-Quran API",
-  description: "API for the Holy Quran with translations in multiple languages",
+  metadataBase: new URL("https://alquran-api.pages.dev"),
+  title: {
+    default: "Al-Quran API - Multilingual Quran API with Translations",
+    template: "%s | Al-Quran API",
+  },
+  description:
+    "A comprehensive RESTful API for accessing the Holy Quran with translations in multiple languages including Arabic, English, Bengali, and more.",
+  keywords: ["quran", "api", "islamic", "multilingual", "translations", "arabic", "bengali", "english", "holy quran"],
+  authors: [
+    {
+      name: "Al-Quran API Team",
+      url: "https://alquran-api.pages.dev",
+    },
+  ],
+  creator: "Al-Quran API Team",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://alquran-api.pages.dev",
+    title: "Al-Quran API - Multilingual Quran API with Translations",
+    description:
+      "A comprehensive RESTful API for accessing the Holy Quran with translations in multiple languages including Arabic, English, Bengali, and more.",
+    siteName: "Al-Quran API",
+    images: [
+      {
+        url: "https://alquran-api.pages.dev/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Al-Quran API",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Al-Quran API - Multilingual Quran API with Translations",
+    description:
+      "A comprehensive RESTful API for accessing the Holy Quran with translations in multiple languages including Arabic, English, Bengali, and more.",
+    images: ["https://alquran-api.pages.dev/og-image.png"],
+    creator: "@alquranapi",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "https://alquran-api.pages.dev/site.webmanifest",
     generator: 'v0.dev'
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({
@@ -22,45 +85,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable, amiri.variable)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="min-h-screen flex flex-col">
-            <header className="border-b">
-              <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                <div className="flex items-center gap-2">
-                  <Book className="h-6 w-6" />
-                  <Link href="/" className="text-xl font-bold">
-                    Quran API
-                  </Link>
-                </div>
-                <nav className="flex items-center gap-4">
-                  <Link href="/search" className="flex items-center gap-1 text-sm hover:underline">
-                    <Search className="h-4 w-4" />
-                    Search
-                  </Link>
-                  <Link href="/about" className="text-sm hover:underline">
-                    About
-                  </Link>
-                  <Link
-                    href="https://github.com"
-                    target="_blank"
-                    className="flex items-center gap-1 text-sm hover:underline"
-                  >
-                    <Github className="h-4 w-4" />
-                    GitHub
-                  </Link>
-                  <ThemeToggle />
-                </nav>
-              </div>
-            </header>
-            <main className="flex-1">{children}</main>
-            <footer className="border-t py-6">
-              <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-                <p>© {new Date().getFullYear()} Multilingual Al-Quran API. All rights reserved.</p>
-              </div>
-            </footer>
+          <div className="relative flex min-h-screen flex-col">
+            <SiteHeader />
+            <div className="flex-1">{children}</div>
+            <SiteFooter />
           </div>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
