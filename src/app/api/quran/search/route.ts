@@ -1,24 +1,27 @@
 import { NextResponse } from "next/server"
-import { getFallbackLanguage, getQuranFilePath, readJsonFile } from "@/lib/quran-utils"
+import { getFallbackLanguage, getQuranFileName, fetchJsonFile } from "@/lib/quran-utils"
+
+export const runtime = "edge"
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const query = searchParams.get("q")
     let lang = searchParams.get("lang") || "en"
+    const baseUrl = new URL(request.url).origin
 
     // Get fallback language if requested one is not available
-    lang = getFallbackLanguage(lang)
+    lang = await getFallbackLanguage(lang, baseUrl)
 
     if (!query || query.trim().length < 3) {
       return NextResponse.json({ error: "Search query must be at least 3 characters long" }, { status: 400 })
     }
 
-    // Get the file path
-    const filePath = getQuranFilePath(lang)
+    // Get the file name
+    const fileName = getQuranFileName(lang)
 
-    // Read the file
-    const quranData = readJsonFile(filePath)
+    // Fetch the file
+    const quranData = await fetchJsonFile(fileName, baseUrl)
 
     if (!quranData) {
       return NextResponse.json({ error: "Failed to load Quran data" }, { status: 500 })

@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server"
 import { getAvailableLanguages } from "@/lib/quran-utils"
 
-export async function GET() {
+export const runtime = "edge"
+
+export async function GET(request: Request) {
   try {
-    const languages = getAvailableLanguages()
+    const baseUrl = new URL(request.url).origin
+    const languages = await getAvailableLanguages(baseUrl)
 
     return NextResponse.json({
       languages,

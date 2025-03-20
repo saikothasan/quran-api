@@ -1,19 +1,22 @@
 import { NextResponse } from "next/server"
-import { getAvailableLanguages, getFallbackLanguage, getQuranFilePath, readJsonFile } from "@/lib/quran-utils"
+import { getAvailableLanguages, getFallbackLanguage, getQuranFileName, fetchJsonFile } from "@/lib/quran-utils"
+
+export const runtime = "edge"
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     let lang = searchParams.get("lang") || "en"
+    const baseUrl = new URL(request.url).origin
 
     // Get fallback language if requested one is not available
-    lang = getFallbackLanguage(lang)
+    lang = await getFallbackLanguage(lang, baseUrl)
 
-    // Get the file path
-    const filePath = getQuranFilePath(lang)
+    // Get the file name
+    const fileName = getQuranFileName(lang)
 
-    // Read the file
-    const quranData = readJsonFile(filePath)
+    // Fetch the file
+    const quranData = await fetchJsonFile(fileName, baseUrl)
 
     if (!quranData) {
       return NextResponse.json({ error: "Failed to load Quran data" }, { status: 500 })
@@ -30,7 +33,7 @@ export async function GET(request: Request) {
     }))
 
     // Get available languages
-    const languages = getAvailableLanguages()
+    const languages = await getAvailableLanguages(baseUrl)
 
     return NextResponse.json({
       language: lang,

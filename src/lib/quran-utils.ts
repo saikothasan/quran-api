@@ -1,6 +1,3 @@
-import fs from "fs"
-import path from "path"
-
 export interface Language {
   code: string
   name: string
@@ -28,57 +25,88 @@ export const LANGUAGE_MAP: Record<string, Language> = {
   },
 }
 
-// Safe file existence check that doesn't throw errors
-export function fileExists(filePath: string): boolean {
-  try {
-    return fs.existsSync(filePath)
-  } catch (error) {
-    console.error(`Error checking if file exists: ${filePath}`, error)
-    return false
-  }
-}
+// Cache for storing fetched JSON data
+const dataCache = new Map<string, any>()
 
-// Safe file reading that doesn't throw errors
-export function readJsonFile(filePath: string): any {
+// Fetch JSON file from public directory
+export async function fetchJsonFile(fileName: string, baseUrl?: string): Promise<any> {
   try {
-    if (!fileExists(filePath)) {
-      return null
+    // Use cache if available
+    if (dataCache.has(fileName)) {
+      return dataCache.get(fileName)
     }
-    const fileContents = fs.readFileSync(filePath, "utf8")
-    return JSON.parse(fileContents)
+
+    // Determine the base URL
+    const url = baseUrl ? `${baseUrl}/${fileName}` : `/${fileName}`
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${fileName}: ${response.status} ${response.statusText}`)
+    }
+
+    const data = await response.json()
+
+    // Cache the data
+    dataCache.set(fileName, data)
+
+    return data
   } catch (error) {
-    console.error(`Error reading JSON file: ${filePath}`, error)
+    console.error(`Error fetching JSON file: ${fileName}`, error)
     return null
   }
 }
 
-export function getAvailableLanguages(): Language[] {
+// Get the appropriate file name for a language
+export function getQuranFileName(lang: string): string {
+  return lang === "transliteration" ? "quran_transliteration.json" : lang === "ar" ? "quran.json" : `quran_${lang}.json`
+}
+
+// Check if a language is supported by trying to fetch its file
+export async function isLanguageSupported(lang: string, baseUrl?: string): Promise<boolean> {
+  const fileName = getQuranFileName(lang)
+  const data = await fetchJsonFile(fileName, baseUrl)
+  return data !== null
+}
+
+// Get a fallback language if the requested one is not available
+export async function getFallbackLanguage(requestedLang: string, baseUrl?: string): Promise<string> {
+  if (await isLanguageSupported(requestedLang, baseUrl)) {
+    return requestedLang
+  }
+
+  // Try English first
+  if (await isLanguageSupported("en", baseUrl)) {
+    return "en"
+  }
+
+  // Try Arabic next
+  if (await isLanguageSupported("ar", baseUrl)) {
+    return "ar"
+  }
+
+  // Try Bengali next (since this is a Bangla Quran API)
+  if (await isLanguageSupported("bn", baseUrl)) {
+    return "bn"
+  }
+
+  // Last resort fallback
+  return "en"
+}
+
+// Get available languages by checking which files exist
+export async function getAvailableLanguages(baseUrl?: string): Promise<Language[]> {
   try {
-    const publicDir = path.join(process.cwd(), "public")
-
-    // Check if directory exists
-    if (!fileExists(publicDir)) {
-      console.error(`Public directory not found: ${publicDir}`)
-      return [LANGUAGE_MAP.en] // Return English as fallback
-    }
-
-    const files = fs.readdirSync(publicDir)
-
     const languages: Language[] = []
+    const languageCodes = Object.keys(LANGUAGE_MAP)
 
-    // Add Arabic (base file)
-    if (files.includes("quran.json")) {
-      languages.push(LANGUAGE_MAP.ar)
-    }
-
-    // Add other languages
-    for (const file of files) {
-      if (file.startsWith("quran_") && file.endsWith(".json")) {
-        const langCode = file.replace("quran_", "").replace(".json", "")
-
-        if (LANGUAGE_MAP[langCode]) {
-          languages.push(LANGUAGE_MAP[langCode])
-        }
+    // Check each language
+    for (const code of languageCodes) {
+      if (await isLanguageSupported(code, baseUrl)) {
+        languages.push(LANGUAGE_MAP[code])
       }
     }
 
@@ -96,45 +124,5 @@ export function getAvailableLanguages(): Language[] {
 
 export function getLanguageDirection(langCode: string): "ltr" | "rtl" {
   return LANGUAGE_MAP[langCode]?.direction || "ltr"
-}
-
-// Get the appropriate file path for a language
-export function getQuranFilePath(lang: string): string {
-  const fileName =
-    lang === "transliteration" ? "quran_transliteration.json" : lang === "ar" ? "quran.json" : `quran_${lang}.json`
-
-  return path.join(process.cwd(), "public", fileName)
-}
-
-// Check if a language is supported
-export function isLanguageSupported(lang: string): boolean {
-  const filePath = getQuranFilePath(lang)
-  return fileExists(filePath)
-}
-
-// Get a fallback language if the requested one is not available
-export function getFallbackLanguage(requestedLang: string): string {
-  if (isLanguageSupported(requestedLang)) {
-    return requestedLang
-  }
-
-  // Try English first
-  if (isLanguageSupported("en")) {
-    return "en"
-  }
-
-  // Try Arabic next
-  if (isLanguageSupported("ar")) {
-    return "ar"
-  }
-
-  // Get the first available language
-  const languages = getAvailableLanguages()
-  if (languages.length > 0) {
-    return languages[0].code
-  }
-
-  // Last resort fallback
-  return "en"
 }
 

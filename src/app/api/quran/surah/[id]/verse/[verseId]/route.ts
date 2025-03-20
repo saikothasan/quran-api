@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server"
-import { getFallbackLanguage, getQuranFilePath, readJsonFile } from "@/lib/quran-utils"
+import { getFallbackLanguage, getQuranFileName, fetchJsonFile } from "@/lib/quran-utils"
+
+export const runtime = "edge"
 
 export async function GET(request: Request, { params }: { params: { id: string; verseId: string } }) {
   try {
     const { searchParams } = new URL(request.url)
     let lang = searchParams.get("lang") || "en"
+    const baseUrl = new URL(request.url).origin
 
     // Get fallback language if requested one is not available
-    lang = getFallbackLanguage(lang)
+    lang = await getFallbackLanguage(lang, baseUrl)
 
     const surahId = Number.parseInt(params.id)
     const verseId = Number.parseInt(params.verseId)
@@ -20,11 +23,11 @@ export async function GET(request: Request, { params }: { params: { id: string; 
       return NextResponse.json({ error: "Invalid verse ID. Must be a positive number." }, { status: 400 })
     }
 
-    // Get the file path
-    const filePath = getQuranFilePath(lang)
+    // Get the file name
+    const fileName = getQuranFileName(lang)
 
-    // Read the file
-    const quranData = readJsonFile(filePath)
+    // Fetch the file
+    const quranData = await fetchJsonFile(fileName, baseUrl)
 
     if (!quranData) {
       return NextResponse.json({ error: "Failed to load Quran data" }, { status: 500 })
