@@ -1,36 +1,266 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Al-Quran API
 
-## Getting Started
+![Al-Quran API](https://img.shields.io/badge/Al--Quran-API-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-orange)
 
-First, run the development server:
+A comprehensive RESTful API for accessing the Holy Quran with translations in multiple languages including Arabic, English, Bengali, and more.
 
-```bash
+## 🌐 Live Demo
+
+Visit the live API and documentation at [https://alquran-api.pages.dev](https://alquran-api.pages.dev)
+
+## ✨ Features
+
+- **Multilingual Support**: Access the Quran in multiple languages including Arabic, English, Bengali, and more
+- **Complete Quran Data**: All 114 surahs with their verses, translations, and metadata
+- **RESTful API**: Simple and intuitive API endpoints
+- **Search Functionality**: Search for specific words or phrases across the entire Quran
+- **No Authentication Required**: Open access for all users
+- **CORS Enabled**: Can be used in web applications
+- **Edge Runtime**: Fast response times with Vercel Edge Runtime
+
+## 📚 API Documentation
+
+### Base URL
+
+
+
+[https://alquran-api.pages.dev/api/quran](https://alquran-api.pages.dev/api/quran)
+
+### Endpoints
+
+| Endpoint | Description | Parameters |
+|----------|-------------|------------|
+| `/api/quran` | Get all surahs | `lang` (optional) |
+| `/api/quran/surah/{id}` | Get a specific surah | `id` (required), `lang` (optional) |
+| `/api/quran/surah/{id}/verse/{verseId}` | Get a specific verse | `id` (required), `verseId` (required), `lang` (optional) |
+| `/api/quran/search` | Search the Quran | `q` (required), `lang` (optional) |
+| `/api/quran/languages` | Get available languages | None |
+
+### Language Parameter
+
+All endpoints accept a `lang` query parameter to specify the language. If not specified, English (`en`) is used as the default language.
+
+Available language codes:
+- `ar` - Arabic
+- `bn` - Bengali
+- `en` - English
+- `es` - Spanish
+- `fr` - French
+- `id` - Indonesian
+- `ru` - Russian
+- `sv` - Swedish
+- `tr` - Turkish
+- `ur` - Urdu
+- `zh` - Chinese
+- `transliteration` - Transliteration
+
+### Example Requests
+
+#### Get all surahs in English
+```
+
+GET [https://alquran-api.pages.dev/api/quran?lang=en](https://alquran-api.pages.dev/api/quran?lang=en)
+
+```plaintext
+
+#### Get Surah Al-Fatihah in Arabic
+```
+
+GET [https://alquran-api.pages.dev/api/quran/surah/1?lang=ar](https://alquran-api.pages.dev/api/quran/surah/1?lang=ar)
+
+```plaintext
+
+#### Get a specific verse
+```
+
+GET [https://alquran-api.pages.dev/api/quran/surah/1/verse/1?lang=en](https://alquran-api.pages.dev/api/quran/surah/1/verse/1?lang=en)
+
+```plaintext
+
+#### Search for "mercy" in the Quran
+```
+
+GET [https://alquran-api.pages.dev/api/quran/search?q=mercy&lang=en](https://alquran-api.pages.dev/api/quran/search?q=mercy&lang=en)
+
+```plaintext
+
+#### Get available languages
+```
+
+GET [https://alquran-api.pages.dev/api/quran/languages](https://alquran-api.pages.dev/api/quran/languages)
+
+```plaintext
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/saikothasan/quran-api.git
+   cd quran-api
+```
+
+2. Install dependencies:
+
+```shellscript
+npm install
+# or
+yarn
+```
+
+
+3. Run the development server:
+
+```shellscript
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+### Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```plaintext
+quran-api/
+├── app/                  # Next.js App Router
+│   ├── api/              # API routes
+│   │   └── quran/        # Quran API endpoints
+│   ├── about/            # About page
+│   ├── demo/             # Demo application
+│   ├── documentation/    # API documentation
+│   ├── search/           # Search page
+│   ├── layout.tsx        # Root layout
+│   └── page.tsx          # Home page
+├── components/           # React components
+│   ├── ui/               # UI components (shadcn/ui)
+│   └── ...               # Other components
+├── lib/                  # Utility functions
+│   └── quran-utils.ts    # Quran-related utilities
+├── public/               # Static files
+│   ├── quran.json        # Arabic Quran data
+│   ├── quran_en.json     # English translation
+│   ├── quran_bn.json     # Bengali translation
+│   └── ...               # Other language files
+└── ...                   # Configuration files
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📦 Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is deployed on [Vercel](https://vercel.com) and is available at [https://alquran-api.pages.dev](https://alquran-api.pages.dev).
 
-## Deploy on Vercel
+To deploy your own instance:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Fork this repository
+2. Create a new project on Vercel
+3. Connect your forked repository
+4. Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## 🧩 Using the API in Your Projects
+
+### JavaScript (Fetch)
+
+```javascript
+// Get all surahs in English
+fetch('https://alquran-api.pages.dev/api/quran?lang=en')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+```
+
+### React Example
+
+```javascriptreact
+import { useState, useEffect } from 'react';
+
+function QuranViewer() {
+  const [surah, setSurah] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchSurah() {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          'https://alquran-api.pages.dev/api/quran/surah/1?lang=en'
+        );
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch');
+        }
+        
+        const data = await response.json();
+        setSurah(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSurah();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!surah) return <div>No data found</div>;
+
+  return (
+    <div>
+      <h1>{surah.transliteration} ({surah.translation})</h1>
+      <div>
+        {surah.verses.map(verse => (
+          <div key={verse.id}>
+            <p>{verse.text}</p>
+            <p>{verse.translation}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+
+## 📧 Contact
+
+Saiko Thasan - [@saikothasan](https://github.com/saikothasan)
+
+Project Link: [https://github.com/saikothasan/quran-api](https://github.com/saikothasan/quran-api)
+
+## 🙏 Acknowledgements
+
+- [The Noble Quran](https://quran.com/)
+- [Next.js](https://nextjs.org/)
+- [Vercel](https://vercel.com)
+- [shadcn/ui](https://ui.shadcn.com/)
