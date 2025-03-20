@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alquran-api.pages.dev/sitemap.xml
+
