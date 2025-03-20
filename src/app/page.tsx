@@ -11,6 +11,12 @@ import Link from "next/link"
 import { ArrowRight, Book, Code, Copy, ExternalLink, Globe } from "lucide-react"
 import type { Language } from "@/lib/quran-utils"
 
+interface ApiResponse {
+  languages?: Language[]
+  error?: string
+  [key: string]: any
+}
+
 export default function Home() {
   const [surahNumber, setSurahNumber] = useState<string>("")
   const [verseNumber, setVerseNumber] = useState<string>("")
@@ -34,7 +40,7 @@ export default function Home() {
           throw new Error(`Failed to fetch languages: ${response.status} ${response.statusText}`)
         }
 
-        const data = await response.json()
+        const data = (await response.json()) as ApiResponse
 
         if (data.error) {
           throw new Error(data.error)
@@ -106,7 +112,7 @@ export default function Home() {
         throw new Error(`API request failed: ${response.status} ${response.statusText}`)
       }
 
-      const data = await response.json()
+      const data = (await response.json()) as ApiResponse
 
       if (data.error) {
         throw new Error(data.error)
