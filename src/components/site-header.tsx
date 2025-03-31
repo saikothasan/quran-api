@@ -2,12 +2,13 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Book, Github, Menu, Search, X } from "lucide-react"
+import { Book, Github, Menu, Search, X, Download, MessageCircle } from "lucide-react"
 import { useState, Suspense } from "react"
 
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 function SiteHeaderInner() {
   const pathname = usePathname()
@@ -46,8 +47,11 @@ function SiteHeaderInner() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <Book className="h-6 w-6 text-primary" />
+            <Book className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
             <span className="hidden font-bold sm:inline-block">Al-Quran API</span>
+            <Badge className="ml-2 hidden sm:inline-flex bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">
+              v1.0
+            </Badge>
           </Link>
         </div>
 
@@ -58,17 +62,28 @@ function SiteHeaderInner() {
               key={route.href}
               href={route.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
-                route.active ? "text-foreground" : "text-muted-foreground",
+                "text-sm font-medium transition-colors hover:text-emerald-600 dark:hover:text-emerald-400",
+                route.active ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground",
               )}
             >
               {route.label}
             </Link>
           ))}
+          <Link
+            href="https://t.me/drkingbd"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400"
+          >
+            <div className="flex items-center">
+              <MessageCircle className="mr-1 h-4 w-4" />
+              Telegram
+            </div>
+          </Link>
           <Link href="https://github.com/saikothasan/quran-api" target="_blank" rel="noopener noreferrer">
-            <Button variant="ghost" size="icon">
-              <Github className="h-5 w-5" />
-              <span className="sr-only">GitHub</span>
+            <Button variant="outline" size="sm" className="border-emerald-200 dark:border-emerald-800">
+              <Github className="mr-2 h-4 w-4" />
+              <span>GitHub</span>
             </Button>
           </Link>
           <ThemeToggle />
@@ -99,8 +114,8 @@ function SiteHeaderInner() {
                 key={route.href}
                 href={route.href}
                 className={cn(
-                  "block py-2 text-base font-medium transition-colors hover:text-primary",
-                  route.active ? "text-foreground" : "text-muted-foreground",
+                  "block py-2 text-base font-medium transition-colors hover:text-emerald-600 dark:hover:text-emerald-400",
+                  route.active ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground",
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -108,14 +123,34 @@ function SiteHeaderInner() {
               </Link>
             ))}
             <Link
+              href="https://t.me/drkingbd"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center py-2 text-base font-medium text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <MessageCircle className="mr-2 h-5 w-5" />
+              Telegram Channel
+            </Link>
+            <Link
               href="https://github.com/saikothasan/quran-api"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center py-2 text-base font-medium text-muted-foreground hover:text-primary"
+              className="flex items-center py-2 text-base font-medium text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400"
               onClick={() => setMobileMenuOpen(false)}
             >
               <Github className="mr-2 h-5 w-5" />
-              GitHub
+              GitHub Repository
+            </Link>
+            <Link
+              href="https://github.com/saikothasan/quran-api/archive/refs/heads/main.zip"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center py-2 text-base font-medium text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Download className="mr-2 h-5 w-5" />
+              Download Source
             </Link>
           </div>
         </div>
