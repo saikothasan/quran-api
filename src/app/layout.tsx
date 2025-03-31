@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     title: "Al-Quran API - Multilingual Quran API with Translations",
     description:
       "Access the Holy Quran through our comprehensive RESTful API with translations in Arabic, English, Bengali, Urdu and more. Perfect for Islamic apps, websites, and research tools.",
-    images: ["https://alquran-api.pages.dev/og-image.png"],
+    images: ["https://alquran-api.pages.dev/quran.png"],
     creator: "@alquranapi",
   },
   alternates: {
