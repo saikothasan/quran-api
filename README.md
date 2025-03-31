@@ -1,6 +1,6 @@
 # Al-Quran API
 
-![Al-Quran API](https://img.shields.io/badge/Al--Quran-API-brightgreen)
+![Al-Quran API](/public/quran.png)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Version](https://img.shields.io/badge/version-1.0.0-orange)
 
