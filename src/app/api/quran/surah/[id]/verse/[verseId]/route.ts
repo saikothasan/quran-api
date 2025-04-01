@@ -47,27 +47,31 @@ export async function GET(request: Request, { params }: { params: { id: string; 
       return NextResponse.json({ error: "Verse not found" }, { status: 404 })
     }
 
-    // Add audio data for the verse
+    // Add audio data for the specific verse
     const audioData = {
       "1": {
         reciter: "Mishary Rashid Al-Afasy",
-        url: `https://the-quran-project.github.io/Quran-Audio/Data/1/${surahId}_${verseId}.mp3`,
+        url: `https://everyayah.com/data/Alafasy_128kbps/${surahId.toString().padStart(3, "0")}${verseId.toString().padStart(3, "0")}.mp3`,
         originalUrl: `https://everyayah.com/data/Alafasy_128kbps/${surahId.toString().padStart(3, "0")}${verseId.toString().padStart(3, "0")}.mp3`,
+        type: "single_verse",
       },
       "2": {
         reciter: "Abu Bakr Al-Shatri",
-        url: `https://the-quran-project.github.io/Quran-Audio/Data/2/${surahId}_${verseId}.mp3`,
+        url: `https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/${surahId.toString().padStart(3, "0")}${verseId.toString().padStart(3, "0")}.mp3`,
         originalUrl: `https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/${surahId.toString().padStart(3, "0")}${verseId.toString().padStart(3, "0")}.mp3`,
+        type: "single_verse",
       },
       "3": {
         reciter: "Nasser Al-Qatami",
-        url: `https://the-quran-project.github.io/Quran-Audio/Data/3/${surahId}_${verseId}.mp3`,
+        url: `https://everyayah.com/data/Nasser_Alqatami_128kbps/${surahId.toString().padStart(3, "0")}${verseId.toString().padStart(3, "0")}.mp3`,
         originalUrl: `https://everyayah.com/data/Nasser_Alqatami_128kbps/${surahId.toString().padStart(3, "0")}${verseId.toString().padStart(3, "0")}.mp3`,
+        type: "single_verse",
       },
       "4": {
         reciter: "Yasser Al-Dosari",
-        url: `https://the-quran-project.github.io/Quran-Audio/Data/4/${surahId}_${verseId}.mp3`,
+        url: `https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/${surahId.toString().padStart(3, "0")}${verseId.toString().padStart(3, "0")}.mp3`,
         originalUrl: `https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/${surahId.toString().padStart(3, "0")}${verseId.toString().padStart(3, "0")}.mp3`,
+        type: "single_verse",
       },
     }
 
