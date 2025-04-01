@@ -239,38 +239,42 @@ function ApiEndpointsInner({ baseUrl }: ApiEndpointsProps) {
         },
       ],
       response: `{
-  "language": "en",
-  "id": 1,
-  "name": "الفاتحة",
-  "transliteration": "Al-Fatihah",
-  "translation": "The Opening",
-  "type": "meccan",
-  "total_verses": 7,
-  "audio": {
-    "1": {
-      "reciter": "Mishary Rashid Al-Afasy",
-      "url": "https://the-quran-project.github.io/Quran-Audio/Data/1/1_1.mp3",
-      "originalUrl": "https://everyayah.com/data/Alafasy_128kbps/001001.mp3"
-    },
-    "2": {
-      "reciter": "Abu Bakr Al-Shatri",
-      "url": "https://the-quran-project.github.io/Quran-Audio/Data/2/1_1.mp3",
-      "originalUrl": "https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/001001.mp3"
-    },
-    "3": {
-      "reciter": "Nasser Al-Qatami",
-      "url": "https://the-quran-project.github.io/Quran-Audio/Data/3/1_1.mp3",
-      "originalUrl": "https://everyayah.com/data/Nasser_Alqatami_128kbps/001001.mp3"
-    },
-    "4": {
-      "reciter": "Yasser Al-Dosari",
-      "url": "https://the-quran-project.github.io/Quran-Audio/Data/4/1_1.mp3",
-      "originalUrl": "https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/001001.mp3"
-    }
+"language": "en",
+"id": 1,
+"name": "الفاتحة",
+"transliteration": "Al-Fatihah",
+"translation": "The Opening",
+"type": "meccan",
+"total_verses": 7,
+"audio": {
+  "1": {
+    "reciter": "Mishary Rashid Al-Afasy",
+    "url": "https://server8.mp3quran.net/afs/001.mp3",
+    "originalUrl": "https://server8.mp3quran.net/afs/001.mp3",
+    "type": "complete_surah"
   },
-  "verses": [
-    // ...
-  ]
+  "2": {
+    "reciter": "Abu Bakr Al-Shatri",
+    "url": "https://server11.mp3quran.net/shatri/001.mp3",
+    "originalUrl": "https://server11.mp3quran.net/shatri/001.mp3",
+    "type": "complete_surah"
+  },
+  "3": {
+    "reciter": "Nasser Al-Qatami",
+    "url": "https://server6.mp3quran.net/qtm/001.mp3",
+    "originalUrl": "https://server6.mp3quran.net/qtm/001.mp3",
+    "type": "complete_surah"
+  },
+  "4": {
+    "reciter": "Yasser Al-Dosari",
+    "url": "https://server11.mp3quran.net/yasser/001.mp3",
+    "originalUrl": "https://server11.mp3quran.net/yasser/001.mp3",
+    "type": "complete_surah"
+  }
+},
+"verses": [
+  // ...
+]
 }`,
     },
   ]
