@@ -9,6 +9,7 @@ export interface AudioRecitation {
   reciter: string
   url: string
   originalUrl: string
+  type?: "complete_surah" | "single_verse"
 }
 
 export interface AudioData {
