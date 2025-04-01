@@ -5,6 +5,35 @@ export interface Language {
   direction: "ltr" | "rtl"
 }
 
+export interface AudioRecitation {
+  reciter: string
+  url: string
+  originalUrl: string
+}
+
+export interface AudioData {
+  [key: string]: AudioRecitation
+}
+
+export interface Verse {
+  id: number
+  text: string
+  translation?: string
+  transliteration?: string
+  audio?: AudioData
+}
+
+export interface Surah {
+  id: number
+  name: string
+  transliteration: string
+  translation: string
+  type: string
+  total_verses: number
+  verses: Verse[]
+  audio?: AudioData
+}
+
 export const LANGUAGE_MAP: Record<string, Language> = {
   ar: { code: "ar", name: "Arabic", nativeName: "العربية", direction: "rtl" },
   bn: { code: "bn", name: "Bengali", nativeName: "বাংলা", direction: "ltr" },
@@ -124,5 +153,33 @@ export async function getAvailableLanguages(baseUrl?: string): Promise<Language[
 
 export function getLanguageDirection(langCode: string): "ltr" | "rtl" {
   return LANGUAGE_MAP[langCode]?.direction || "ltr"
+}
+
+// Get audio URL for a specific verse
+export function getVerseAudioUrl(surahId: number, verseId: number, reciterId = "1"): string {
+  const reciters = {
+    "1": {
+      name: "Mishary Rashid Al-Afasy",
+      baseUrl: "https://everyayah.com/data/Alafasy_128kbps/",
+    },
+    "2": {
+      name: "Abu Bakr Al-Shatri",
+      baseUrl: "https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/",
+    },
+    "3": {
+      name: "Nasser Al-Qatami",
+      baseUrl: "https://everyayah.com/data/Nasser_Alqatami_128kbps/",
+    },
+    "4": {
+      name: "Yasser Al-Dosari",
+      baseUrl: "https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/",
+    },
+  }
+
+  const reciter = reciters[reciterId as keyof typeof reciters] || reciters["1"]
+  const formattedSurahId = surahId.toString().padStart(3, "0")
+  const formattedVerseId = verseId.toString().padStart(3, "0")
+
+  return `${reciter.baseUrl}${formattedSurahId}${formattedVerseId}.mp3`
 }
 
