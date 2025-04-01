@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState, useEffect, Suspense } from "react"
-import { Book, ChevronLeft, ChevronRight, Loader2, Search, Volume2 } from "lucide-react"
+import { useState, useEffect, useRef, Suspense } from "react"
+import { Book, ChevronLeft, ChevronRight, Loader2, Pause, Search, Volume2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
-import type { Language } from "@/lib/quran-utils"
+import type { Language, AudioData } from "@/lib/quran-utils"
 
 interface Surah {
   id: number
@@ -25,6 +25,7 @@ interface Surah {
   translation: string
   type: string
   total_verses: number
+  audio?: AudioData
 }
 
 interface Verse {
@@ -39,6 +40,7 @@ interface ApiResponse {
   surahs?: Surah[]
   verses?: Verse[]
   language?: string
+  audio?: AudioData
   error?: string
   [key: string]: any
 }
@@ -61,6 +63,12 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [error, setError] = useState<string | null>(null)
   const [direction, setDirection] = useState<"ltr" | "rtl">("ltr")
+  const [audioData, setAudioData] = useState<AudioData | null>(null)
+  const [selectedReciter, setSelectedReciter] = useState<string>("1")
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const [currentVerse, setCurrentVerse] = useState<number | null>(null)
+
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // Fetch languages
   useEffect(() => {
@@ -172,6 +180,7 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
         }
 
         setVerses(data.verses || [])
+        setAudioData(data.audio || null)
       } catch (error) {
         console.error("Failed to fetch verses:", error)
         setError(error instanceof Error ? error.message : "Failed to fetch verses")
@@ -182,6 +191,16 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
 
     fetchVerses()
   }, [baseUrl, selectedSurah, selectedLanguage])
+
+  // Handle audio playback
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.onended = () => {
+        setIsPlaying(false)
+        setCurrentVerse(null)
+      }
+    }
+  }, [audioRef])
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -258,11 +277,60 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
   }
 
   const playAudio = (verse: Verse) => {
-    // This is a placeholder for audio functionality
-    toast({
-      title: "Audio feature",
-      description: "Audio playback would be implemented here",
-    })
+    if (!audioData || !audioData[selectedReciter]) {
+      toast({
+        title: "Audio not available",
+        description: "Audio for this verse is not available",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Stop current audio if playing
+    if (audioRef.current && isPlaying) {
+      audioRef.current.pause()
+      setIsPlaying(false)
+
+      // If clicking the same verse, just stop playback
+      if (currentVerse === verse.id) {
+        setCurrentVerse(null)
+        return
+      }
+    }
+
+    // Create URL for the specific verse
+    const surahIdStr = selectedSurah.toString().padStart(3, "0")
+    const verseIdStr = verse.id.toString().padStart(3, "0")
+    const audioUrl = audioData[selectedReciter].originalUrl.replace("001002", `${surahIdStr}${verseIdStr}`)
+
+    // Play the audio
+    if (audioRef.current) {
+      audioRef.current.src = audioUrl
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true)
+          setCurrentVerse(verse.id)
+        })
+        .catch((error) => {
+          console.error("Audio playback error:", error)
+          toast({
+            title: "Audio playback failed",
+            description: "Failed to play audio. Please try again.",
+            variant: "destructive",
+          })
+        })
+    }
+  }
+
+  const handleReciterChange = (value: string) => {
+    setSelectedReciter(value)
+    // Stop current audio if playing
+    if (audioRef.current && isPlaying) {
+      audioRef.current.pause()
+      setIsPlaying(false)
+      setCurrentVerse(null)
+    }
   }
 
   const currentSurah = surahs.find((s) => s.id === selectedSurah)
@@ -271,7 +339,7 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Quran Reader</CardTitle>
-        <CardDescription>Read and search the Quran in multiple languages</CardDescription>
+        <CardDescription>Read, listen, and search the Quran in multiple languages</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {error && <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">Error: {error}</div>}
@@ -318,6 +386,23 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
             </div>
           </div>
 
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <label className="text-sm font-medium block mb-2">Reciter</label>
+              <Select value={selectedReciter} onValueChange={handleReciterChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select reciter" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Mishary Rashid Al-Afasy</SelectItem>
+                  <SelectItem value="2">Abu Bakr Al-Shatri</SelectItem>
+                  <SelectItem value="3">Nasser Al-Qatami</SelectItem>
+                  <SelectItem value="4">Yasser Al-Dosari</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <Tabs defaultValue="read">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="read">
@@ -331,7 +416,7 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
             </TabsList>
             <TabsContent value="read" className="space-y-4 pt-4">
               {currentSurah && (
-                <div className="flex flex-col sm:flex-row justify-between items-center bg-muted p-4 rounded-lg">
+                <div className="flex flex-col sm:flex-row justify-between items-center bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg">
                   <div>
                     <h2 className="text-xl font-bold">
                       {currentSurah.transliteration} ({currentSurah.translation})
@@ -373,9 +458,24 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
                         className="space-y-2"
                       >
                         <div className="flex items-center justify-between">
-                          <Badge variant="outline">{verse.id}</Badge>
-                          <Button variant="ghost" size="icon" onClick={() => playAudio(verse)} title="Play audio">
-                            <Volume2 className="h-4 w-4" />
+                          <Badge variant="outline" className="bg-emerald-50 dark:bg-emerald-900/20">
+                            {verse.id}
+                          </Badge>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => playAudio(verse)}
+                            title={isPlaying && currentVerse === verse.id ? "Pause audio" : "Play audio"}
+                            className={
+                              isPlaying && currentVerse === verse.id ? "text-emerald-600 dark:text-emerald-400" : ""
+                            }
+                          >
+                            {isPlaying && currentVerse === verse.id ? (
+                              <Pause className="h-4 w-4 mr-2" />
+                            ) : (
+                              <Volume2 className="h-4 w-4 mr-2" />
+                            )}
+                            {isPlaying && currentVerse === verse.id ? "Playing" : "Listen"}
                           </Button>
                         </div>
                         <p
@@ -397,7 +497,7 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
               <form onSubmit={handleSearch} className="flex gap-2">
                 <Input
                   type="text"
-                  placeholder="Search the Quran (min 3 characters)"
+                  placeholder="Search the Quran (minimum 3 characters)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="flex-1"
@@ -414,7 +514,7 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
                   {searchResults.map((result) => (
                     <div key={result.surah.id} className="space-y-4">
                       <div className="flex items-center gap-2">
-                        <Book className="h-5 w-5 text-primary" />
+                        <Book className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         <h4 className="font-medium">
                           Surah {result.surah.transliteration}{" "}
                           {result.surah.translation && `(${result.surah.translation})`}
@@ -425,7 +525,9 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
                         {result.verses.map((verse: Verse) => (
                           <div key={verse.id} className="space-y-2">
                             <div className="flex items-start gap-2">
-                              <Badge variant="outline">{verse.id}</Badge>
+                              <Badge variant="outline" className="bg-emerald-50 dark:bg-emerald-900/20">
+                                {verse.id}
+                              </Badge>
                               <p
                                 dir={direction}
                                 className={`text-lg leading-relaxed ${
@@ -456,6 +558,7 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
       <CardFooter className="flex justify-between">
         <p className="text-xs text-muted-foreground">Powered by Al-Quran API</p>
       </CardFooter>
+      <audio ref={audioRef} className="hidden" />
       <Toaster />
     </Card>
   )
