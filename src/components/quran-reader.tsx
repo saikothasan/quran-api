@@ -298,10 +298,18 @@ function QuranReaderInner({ baseUrl }: QuranReaderProps) {
       }
     }
 
-    // Create URL for the specific verse
-    const surahIdStr = selectedSurah.toString().padStart(3, "0")
-    const verseIdStr = verse.id.toString().padStart(3, "0")
-    const audioUrl = audioData[selectedReciter].originalUrl.replace("001002", `${surahIdStr}${verseIdStr}`)
+    // Check if we have complete surah audio or need to use verse-specific audio
+    let audioUrl = ""
+
+    if (audioData[selectedReciter].type === "complete_surah") {
+      // Use the complete surah audio
+      audioUrl = audioData[selectedReciter].originalUrl
+    } else {
+      // Create URL for the specific verse
+      const surahIdStr = selectedSurah.toString().padStart(3, "0")
+      const verseIdStr = verse.id.toString().padStart(3, "0")
+      audioUrl = audioData[selectedReciter].originalUrl.replace("001001", `${surahIdStr}${verseIdStr}`)
+    }
 
     // Play the audio
     if (audioRef.current) {
