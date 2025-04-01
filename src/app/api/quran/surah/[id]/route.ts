@@ -35,27 +35,31 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: "Surah not found" }, { status: 404 })
     }
 
-    // Add audio data for the surah
+    // Add audio data for the complete surah
     const audioData = {
       "1": {
         reciter: "Mishary Rashid Al-Afasy",
-        url: `https://the-quran-project.github.io/Quran-Audio/Data/1/${surahId}_${surah.verses[0].id}.mp3`,
-        originalUrl: `https://everyayah.com/data/Alafasy_128kbps/${surahId.toString().padStart(3, "0")}${surah.verses[0].id.toString().padStart(3, "0")}.mp3`,
+        url: `https://server8.mp3quran.net/afs/${surahId.toString().padStart(3, "0")}.mp3`,
+        originalUrl: `https://server8.mp3quran.net/afs/${surahId.toString().padStart(3, "0")}.mp3`,
+        type: "complete_surah",
       },
       "2": {
         reciter: "Abu Bakr Al-Shatri",
-        url: `https://the-quran-project.github.io/Quran-Audio/Data/2/${surahId}_${surah.verses[0].id}.mp3`,
-        originalUrl: `https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/${surahId.toString().padStart(3, "0")}${surah.verses[0].id.toString().padStart(3, "0")}.mp3`,
+        url: `https://server11.mp3quran.net/shatri/${surahId.toString().padStart(3, "0")}.mp3`,
+        originalUrl: `https://server11.mp3quran.net/shatri/${surahId.toString().padStart(3, "0")}.mp3`,
+        type: "complete_surah",
       },
       "3": {
         reciter: "Nasser Al-Qatami",
-        url: `https://the-quran-project.github.io/Quran-Audio/Data/3/${surahId}_${surah.verses[0].id}.mp3`,
-        originalUrl: `https://everyayah.com/data/Nasser_Alqatami_128kbps/${surahId.toString().padStart(3, "0")}${surah.verses[0].id.toString().padStart(3, "0")}.mp3`,
+        url: `https://server6.mp3quran.net/qtm/${surahId.toString().padStart(3, "0")}.mp3`,
+        originalUrl: `https://server6.mp3quran.net/qtm/${surahId.toString().padStart(3, "0")}.mp3`,
+        type: "complete_surah",
       },
       "4": {
         reciter: "Yasser Al-Dosari",
-        url: `https://the-quran-project.github.io/Quran-Audio/Data/4/${surahId}_${surah.verses[0].id}.mp3`,
-        originalUrl: `https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/${surahId.toString().padStart(3, "0")}${surah.verses[0].id.toString().padStart(3, "0")}.mp3`,
+        url: `https://server11.mp3quran.net/yasser/${surahId.toString().padStart(3, "0")}.mp3`,
+        originalUrl: `https://server11.mp3quran.net/yasser/${surahId.toString().padStart(3, "0")}.mp3`,
+        type: "complete_surah",
       },
     }
 
