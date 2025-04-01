@@ -13,6 +13,7 @@ import {
   Server,
   Shield,
   Zap,
+  Volume2,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -217,6 +218,25 @@ export default function HomePage() {
               <CardFooter>
                 <Badge variant="outline" className="border-emerald-200 dark:border-emerald-800">
                   Developer Friendly
+                </Badge>
+              </CardFooter>
+            </Card>
+            <Card className="flex flex-col items-center text-center border-emerald-100 dark:border-emerald-900/20 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader>
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+                  <Volume2 className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <CardTitle className="mt-4">Audio Recitations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Listen to beautiful Quran recitations from renowned reciters including Mishary Rashid Al-Afasy, Abu
+                  Bakr Al-Shatri, and more.
+                </CardDescription>
+              </CardContent>
+              <CardFooter>
+                <Badge variant="outline" className="border-emerald-200 dark:border-emerald-800">
+                  4+ Reciters
                 </Badge>
               </CardFooter>
             </Card>
