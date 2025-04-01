@@ -218,6 +218,61 @@ function ApiEndpointsInner({ baseUrl }: ApiEndpointsProps) {
   ]
 }`,
     },
+    {
+      id: "audio-data",
+      title: "Audio Recitations",
+      description: "Audio recitation data is included with surah and verse responses",
+      method: "GET",
+      path: "/api/quran/surah/{surah_id}?lang={lang}",
+      parameters: [
+        {
+          name: "surah_id",
+          type: "number",
+          required: true,
+          description: "ID of the surah (1-114)",
+        },
+        {
+          name: "lang",
+          type: "string",
+          required: false,
+          description: "Language code (default: en)",
+        },
+      ],
+      response: `{
+  "language": "en",
+  "id": 1,
+  "name": "الفاتحة",
+  "transliteration": "Al-Fatihah",
+  "translation": "The Opening",
+  "type": "meccan",
+  "total_verses": 7,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://the-quran-project.github.io/Quran-Audio/Data/1/1_1.mp3",
+      "originalUrl": "https://everyayah.com/data/Alafasy_128kbps/001001.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://the-quran-project.github.io/Quran-Audio/Data/2/1_1.mp3",
+      "originalUrl": "https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/001001.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://the-quran-project.github.io/Quran-Audio/Data/3/1_1.mp3",
+      "originalUrl": "https://everyayah.com/data/Nasser_Alqatami_128kbps/001001.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://the-quran-project.github.io/Quran-Audio/Data/4/1_1.mp3",
+      "originalUrl": "https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/001001.mp3"
+    }
+  },
+  "verses": [
+    // ...
+  ]
+}`,
+    },
   ]
 
   return (
