@@ -35,8 +35,33 @@ export async function GET(request: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: "Surah not found" }, { status: 404 })
     }
 
+    // Add audio data for the surah
+    const audioData = {
+      "1": {
+        reciter: "Mishary Rashid Al-Afasy",
+        url: `https://the-quran-project.github.io/Quran-Audio/Data/1/${surahId}_${surah.verses[0].id}.mp3`,
+        originalUrl: `https://everyayah.com/data/Alafasy_128kbps/${surahId.toString().padStart(3, "0")}${surah.verses[0].id.toString().padStart(3, "0")}.mp3`,
+      },
+      "2": {
+        reciter: "Abu Bakr Al-Shatri",
+        url: `https://the-quran-project.github.io/Quran-Audio/Data/2/${surahId}_${surah.verses[0].id}.mp3`,
+        originalUrl: `https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/${surahId.toString().padStart(3, "0")}${surah.verses[0].id.toString().padStart(3, "0")}.mp3`,
+      },
+      "3": {
+        reciter: "Nasser Al-Qatami",
+        url: `https://the-quran-project.github.io/Quran-Audio/Data/3/${surahId}_${surah.verses[0].id}.mp3`,
+        originalUrl: `https://everyayah.com/data/Nasser_Alqatami_128kbps/${surahId.toString().padStart(3, "0")}${surah.verses[0].id.toString().padStart(3, "0")}.mp3`,
+      },
+      "4": {
+        reciter: "Yasser Al-Dosari",
+        url: `https://the-quran-project.github.io/Quran-Audio/Data/4/${surahId}_${surah.verses[0].id}.mp3`,
+        originalUrl: `https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/${surahId.toString().padStart(3, "0")}${surah.verses[0].id.toString().padStart(3, "0")}.mp3`,
+      },
+    }
+
     return NextResponse.json({
       language: lang,
+      audio: audioData,
       ...surah,
     })
   } catch (error) {
